@@ -9,16 +9,16 @@ public class Index {
 	FileWriter index; //table of contents, list on every signle item, and where it exists 
 	HashMap <String, Blob> objects; 
 	public Index() throws IOException {
+		initialize();
+		
+	}
+	public void initialize() throws IOException {
 		index = new FileWriter("index"); 
 		objects = new HashMap <String,Blob> ();
 		File theDir = new File("/path/objects");
 		if (!theDir.exists()){
 		    theDir.mkdirs();
 		}
-		
-	}
-	public void initialize() {
-		// creates empty object folder 
 	}
 	public void addBlob(String fileName) throws IOException {
 		Blob newBlobWithFileName = new Blob (fileName);
