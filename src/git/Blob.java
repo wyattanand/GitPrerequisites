@@ -34,7 +34,7 @@ public class Blob {
 			e.printStackTrace();
 		}
 		Scanner scanOfFile = new Scanner(new File(filePath));//scanning filePath contents
-		FileWriter fileWriterOfSha = new FileWriter(sha1);
+		FileWriter fileWriterOfSha = new FileWriter("./objects/" + sha1);
 		PrintWriter printWriterofFileWriter = new PrintWriter (fileWriterOfSha);
 		while(scanOfFile.hasNextLine())
 	     {
@@ -48,6 +48,7 @@ public class Blob {
 		    	fileWriterOfSha.flush();
 		    	fileWriterOfSha.close();
 		     }
+		
 	}
 	
 
