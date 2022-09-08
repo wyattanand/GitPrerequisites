@@ -51,6 +51,9 @@ public class Blob {
 		
 	}
 	
+	public String getSha() {
+		return sha1; 
+	}
 
 }
 	

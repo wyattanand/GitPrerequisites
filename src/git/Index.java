@@ -1,6 +1,5 @@
 package git;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,15 +13,20 @@ public class Index {
 		
 		
 	}
+	public void initialize() {
+		// creates empty object folder 
+	}
 	public void addBlob(String fileName) throws IOException {
 		Blob newBlobWithFileName = new Blob (fileName);
 		objects.put(fileName,newBlobWithFileName);
-		index.append(fileName + newBlobWithFileName); 
+		index.append(fileName + " : " + newBlobWithFileName); 
 	}
-	public void removeBlob(String fileName) {
+	
+	 
+	public void removeBlob(String fileName) throws IOException {
 		objects.remove(fileName);
-		File fileToDelete = new File("./objects/" +objects.get(fileName));
-		fileToDelete.delete(); 
+		FileWriter fileToDelete = new FileWriter("./objects/" + objects.get(fileName).getSha());
+		fileToDelete.close(); 
 	}
 	
 }
