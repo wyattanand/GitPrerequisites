@@ -21,7 +21,8 @@ public class Index {
 	}
 	public void removeBlob(String fileName) {
 		objects.remove(fileName);
-		
+		File fileToDelete = new File("./objects/" +objects.get(fileName));
+		fileToDelete.delete(); 
 	}
 	
 }
