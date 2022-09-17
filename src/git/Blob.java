@@ -1,6 +1,7 @@
 package git;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,6 +55,19 @@ public class Blob {
 	public String getSha() {
 		return sha1; 
 	}
+	
+	public static String getContent (String filepath) throws IOException {
+		File file = new File (filepath);
+		BufferedReader br = new BufferedReader(new FileReader(file)); 
+		StringBuilder sb = new StringBuilder(); 
+		String line = br.readLine(); 
+		while (line != null) { 
+			sb.append(line).append("\n"); 
+			line = br.readLine(); 
+		} 
+		String fileAsString = sb.toString();
+		return fileAsString;
+	} 
 
 }
 	
