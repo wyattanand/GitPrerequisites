@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -25,7 +26,15 @@ class JUnitTree {
 	}
 	
 	@Test
-	void fileContents() {
+	void fileContents() throws IOException {
+		File file = new File ("Objects/ab4d8d2a5f480a137067da17100271cd176607a1");
+		String content = FileUtil.getContent("Objects/ab4d8d2a5f480a137067da17100271cd176607a1");
+		String sha = FileUtil.sha1(content);
+		assertTrue(sha.equals("ab4d8d2a5f480a137067da17100271cd176607a1"));
+	}
+	
+	@Test
+	void testIfValidSha() {
 		
 	}
 
