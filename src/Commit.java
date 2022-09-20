@@ -16,6 +16,7 @@ public class Commit {
 	private String nameOfFile; 
 	private String sha1;
 	private String pointer;
+	private String nextPointer;
 	public Commit(String author, String pTreeValue, String sumOfChanges, String pointerParent) throws IOException {
 		author1 = author;
 		summary = sumOfChanges; 
@@ -28,7 +29,6 @@ public class Commit {
 		else {
 			pointer = null;
 		}
-
 		writeFile(); 
 		
 	}
@@ -56,8 +56,8 @@ public class Commit {
 	public void writeFile () throws IOException {
 		FileWriter fw = new FileWriter(new File("objects", sha1));
 		fw.write(pTree); // 1 writing p Tree value 
-		fw.write("idk"); // 2 writing location of previous commit
-		fw.write("idk2"); // 3 writing location of next commit
+		fw.write(pointer); // 2 writing location of previous commit
+		fw.write(nextPointer); // 3 writing location of next commit
 		fw.write(author1); //  4 writing author
 		fw.write(date); // 5 writing date
 		fw.write(summary); // 6 writing location of previous commit
