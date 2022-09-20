@@ -1,5 +1,7 @@
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Commit {
 	public Commit() {
@@ -19,5 +21,10 @@ public class Commit {
 		}
 
 		return sha1;
+	}
+	
+	public String getDate () {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		return timeStamp;
 	}
 }
