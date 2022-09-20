@@ -21,16 +21,17 @@ class JUnitTree {
 	
 	@Test
 	void writeFile() {
-		File file = new File ("Objects/ab4d8d2a5f480a137067da17100271cd176607a1");
+		File file = new File ("Objects/80f604f13ef3bdc02be825df377c5dbd1059f0f1");
 		assertTrue(file.exists()); 
 	}
 	
 	@Test
 	void fileContents() throws IOException {
-		File file = new File ("Objects/ab4d8d2a5f480a137067da17100271cd176607a1");
-		String content = FileUtil.getContent("Objects/ab4d8d2a5f480a137067da17100271cd176607a1");
+		File file = new File ("Objects/80f604f13ef3bdc02be825df377c5dbd1059f0f1");
+		String content = FileUtil.getContent("Objects/80f604f13ef3bdc02be825df377c5dbd1059f0f1");
+		System.out.println("content" + content); 
 		String sha = FileUtil.sha1(content);
-		assertTrue(sha.equals("ab4d8d2a5f480a137067da17100271cd176607a1"));
+		assertTrue(sha.equals("80f604f13ef3bdc02be825df377c5dbd1059f0f1"));
 	}
 	
 	@Test
