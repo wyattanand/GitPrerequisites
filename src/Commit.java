@@ -16,13 +16,20 @@ public class Commit {
 	private String nameOfFile; 
 	private String sha1;
 	private String pointer;
-	public Commit(String author, String pTreeValue, String sumOfChanges, String pointerParent) {
+	public Commit(String author, String pTreeValue, String sumOfChanges, String pointerParent) throws IOException {
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
-		pointer = pointerParent;
 		sha1 = generateSha1(summary,date,author1,pointer);
 		pTree = pTreeValue;
+		if(pointer != null) {
+			pointer = pointerParent; 
+		}
+		else {
+			pointer = null;
+		}
+
+		writeFile(); 
 		
 	}
 	
