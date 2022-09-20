@@ -26,7 +26,7 @@ class JUnitTree {
 	}
 	
 	@Test
-	void fileContents() throws IOException {
+	void fileContentsandifvalidsha() throws IOException {
 		File file = new File ("Objects/80f604f13ef3bdc02be825df377c5dbd1059f0f1");
 		String content = FileUtil.getContent("Objects/80f604f13ef3bdc02be825df377c5dbd1059f0f1");
 		System.out.println("content" + content); 
@@ -34,9 +34,5 @@ class JUnitTree {
 		assertTrue(sha.equals("80f604f13ef3bdc02be825df377c5dbd1059f0f1"));
 	}
 	
-	@Test
-	void testIfValidSha() {
-		
-	}
 
 }
