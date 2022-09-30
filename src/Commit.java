@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Scanner;
 
 import git.Tree;
 
@@ -17,6 +19,16 @@ public class Commit {
 	private String pointer;
 	private String nextPointer;
 	public Commit(String author, String sumOfChanges, String pointerParent) throws IOException {
+		Scanner scanny = new Scanner("./index");
+		String fileName;
+		String sha1;
+		ArrayList<String> list = new ArrayList<String>();
+		while (scanny.hasNext()) {
+			fileName = scanny.next();
+			sha1 = (scanny.next() + scanny.next()).substring(1);
+			list.add("blob : " + sha1 + " " + fileName);
+		}
+		Tree tree = new Tree(list);
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
@@ -60,6 +72,6 @@ public class Commit {
 		fw.write(date); // 5 writing date
 		fw.write(summary); // 6 writing location of previous commit
 		fw.close();
-		
 	}
 }
+
