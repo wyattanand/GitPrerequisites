@@ -18,7 +18,8 @@ public class Commit {
 	private String sha1;
 	private String pointer;
 	private String nextPointer;
-	public Commit(String author, String sumOfChanges, String pointerParent) throws IOException {
+	private Tree tree;
+	public Commit(String author, String sumOfChanges, String pointerParent) throws Exception {
 		Scanner scanny = new Scanner("./index");
 		String fileName;
 		String sha1;
@@ -28,7 +29,10 @@ public class Commit {
 			sha1 = (scanny.next() + scanny.next()).substring(1);
 			list.add("blob : " + sha1 + " " + fileName);
 		}
-		Tree tree = new Tree(list);
+		tree = new Tree(list);
+		File oldIndexFile = new File("./index");
+		oldIndexFile.delete();
+		File newIndexFile = new File("./index");
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
@@ -65,7 +69,7 @@ public class Commit {
 	
 	public void writeFile () throws IOException {
 		FileWriter fw = new FileWriter(new File("objects", sha1));
-		fw.write(pTree); // 1 writing p Tree value 
+		fw.write(tree.sha1); // 1 writing p Tree value 
 		fw.write(pointer); // 2 writing location of previous commit
 		fw.write(nextPointer); // 3 writing location of next commit
 		fw.write(author1); //  4 writing author

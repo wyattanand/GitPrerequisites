@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 public class Tree {
+	public String sha1;
 	public Tree(ArrayList<String> list) throws Exception {
 		File tree = new File("Objects/tree");
 		tree.createNewFile();
@@ -26,7 +27,7 @@ public class Tree {
 		}
 		myWriter.close();
 		String contents = readFile(tree.getPath(), StandardCharsets.US_ASCII);
-		String sha1 = encryptThisString(contents);
+		sha1 = encryptThisString(contents);
 		File newFile = new File("Objects/" + sha1);
 		newFile.createNewFile();
 		copyContent(tree, newFile);
