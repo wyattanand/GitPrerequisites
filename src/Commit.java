@@ -9,7 +9,6 @@ import java.util.Calendar;
 import git.Tree;
 
 public class Commit {
-	private String pTree; 
 	private String author1;
 	private String date;
 	private String summary;
@@ -17,12 +16,11 @@ public class Commit {
 	private String sha1;
 	private String pointer;
 	private String nextPointer;
-	public Commit(String author, String pTreeValue, String sumOfChanges, String pointerParent) throws IOException {
+	public Commit(String author, String sumOfChanges, String pointerParent) throws IOException {
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
 		sha1 = generateSha1(summary,date,author1,pointer);
-		pTree = pTreeValue;
 		if(pointer != null) {
 			pointer = pointerParent; 
 		}
