@@ -13,7 +13,6 @@ public class Index {
 		initialize();
 	}
 	public void initialize() throws IOException {
-		head.delete();
 		index = new FileWriter("index"); 
 		objects = new HashMap <String,Blob> ();
 		head = new File("./HEAD");

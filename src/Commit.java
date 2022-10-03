@@ -24,14 +24,16 @@ public class Commit {
 	private Tree tree;
 	private Commit pCommit;
 	public Commit(String author, String sumOfChanges, Commit parent) throws Exception {
-		Scanner scanny = new Scanner("./index");
+		File indexFile = new File("./index");
+		Scanner scanny = new Scanner(indexFile);
 		String fileName;
 		String sha;
 		String deletedName;
 		pCommit = parent;
 		ArrayList<String> list = new ArrayList<String>();
-		while (scanny.hasNext()) {
+		while (scanny.hasNextLine()) {
 			fileName = scanny.next();
+			System.out.println(fileName);
 			if (fileName.charAt(0) == '*') {
 				deletedName = scanny.next();
 				for (int i = 0; i < list.size(); i++) {
@@ -39,11 +41,18 @@ public class Commit {
 						list.remove(i);
 					}
 				}
+			} else {
+				String nxt1 = scanny.next();
+				System.out.println(nxt1);
+				String nxt2 = scanny.next();
+				System.out.println(nxt2);
+				sha = (nxt1 + nxt2).substring(1);
+				list.add("blob : " + sha + " " + fileName);
 			}
-			sha = (scanny.next() + scanny.next()).substring(1);
-			list.add("blob : " + sha + " " + fileName);
 		}
-		list.add("tree : " + pCommit.getTree().getSha1());
+		if (pCommit != null) {
+			list.add("tree : " + pCommit.getTree().getSha1());
+		}
 		tree = new Tree(list);
 		File oldIndexFile = new File("./index");
 		oldIndexFile.delete();
@@ -51,7 +60,11 @@ public class Commit {
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
-		sha1 = generateSha1(summary,date,author1,pCommit.getSha1());
+		String parentSha = "";
+		if (pCommit != null) {
+			parentSha = pCommit.getSha1();
+		}
+		sha1 = generateSha1(summary,date,author1, parentSha);
 		writeFile(); 
 		FileWriter headWriter = new FileWriter("./HEAD");
 		headWriter.write(sha1);
