@@ -27,10 +27,19 @@ public class Commit {
 		Scanner scanny = new Scanner("./index");
 		String fileName;
 		String sha;
+		String deletedName;
 		pCommit = parent;
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNext()) {
 			fileName = scanny.next();
+			if (fileName.charAt(0) == '*') {
+				deletedName = scanny.next();
+				for (int i = 0; i < list.size(); i++) {
+					if (list.get(i).contains(deletedName)) {
+						list.remove(i);
+					}
+				}
+			}
 			sha = (scanny.next() + scanny.next()).substring(1);
 			list.add("blob : " + sha + " " + fileName);
 		}
@@ -77,13 +86,10 @@ public class Commit {
 		return timeStamp;
 	}
 	
-	public boolean delete(String fileName, Tree t) throws NoSuchAlgorithmException, IOException {
+	public void delete(String fileName, Tree t) throws NoSuchAlgorithmException, IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
 		writer.append("*deleted*" + fileName);
 		writer.close();
-		
-		
-		return false;
 	}
 	
 	public void writeFile () throws IOException {
