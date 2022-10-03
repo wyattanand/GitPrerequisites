@@ -1,8 +1,10 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,15 +25,15 @@ public class Commit {
 	public Commit(String author, String sumOfChanges, Commit parent) throws Exception {
 		Scanner scanny = new Scanner("./index");
 		String fileName;
-		String sha1;
+		String sha;
 		pCommit = parent;
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNext()) {
 			fileName = scanny.next();
-			sha1 = (scanny.next() + scanny.next()).substring(1);
-			list.add("blob : " + sha1 + " " + fileName);
+			sha = (scanny.next() + scanny.next()).substring(1);
+			list.add("blob : " + sha + " " + fileName);
 		}
-		list.add("tree : " + pCommit.tree.sha1);
+		list.add("tree : " + pCommit.getTree().getSha1());
 		tree = new Tree(list);
 		File oldIndexFile = new File("./index");
 		oldIndexFile.delete();
@@ -39,9 +41,19 @@ public class Commit {
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
-		sha1 = generateSha1(summary,date,author1,pCommit.sha1);
+		sha1 = generateSha1(summary,date,author1,pCommit.getSha1());
 		writeFile(); 
-		
+		FileWriter headWriter = new FileWriter("./HEAD");
+		headWriter.write(sha1);
+		headWriter.close();
+	}
+	
+	public Tree getTree() {
+		return tree;
+	}
+	
+	public String getSha1() {
+		return sha1;
 	}
 	
 	public String generateSha1 (String summary, String date, String author, String pointer) {
@@ -64,20 +76,39 @@ public class Commit {
 		return timeStamp;
 	}
 	
-	public boolean delete(String fileName) {
+	public boolean delete(String fileName, Tree t) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		String fileSha = toSha1(fileName);
+		Scanner scanny = new Scanner("./index");
+		String deletedFile;
+		ArrayList<String> arr = new ArrayList<String>();
+		while (scanny.hasNext()) {
+			arr.add(scanny.nextLine());
+		}
+		scanny.close();
+		
+		
+		
 		
 		return false;
 	}
 	
 	public void writeFile () throws IOException {
 		FileWriter fw = new FileWriter(new File("objects", sha1));
-		fw.write(tree.sha1); // 1 writing p Tree value 
+		fw.write(tree.getSha1()); // 1 writing p Tree value 
 		fw.write(pointer); // 2 writing location of previous commit
 		fw.write(nextPointer); // 3 writing location of next commit
 		fw.write(author1); //  4 writing author
 		fw.write(date); // 5 writing date
 		fw.write(summary); // 6 writing location of previous commit
 		fw.close();
+	}
+	
+	public String toSha1(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+		digest.reset(); 
+		digest.update(input.getBytes("utf8"));
+		sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
+		return input;
 	}
 }
 

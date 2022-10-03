@@ -63,6 +63,11 @@ public class Tree {
             throw new RuntimeException(e);
         }
 	}
+	
+	public String getSha1() {
+		return sha1;
+	}
+	
 	public static void copyContent(File a, File b) throws Exception
     {
         FileInputStream in = new FileInputStream(a);

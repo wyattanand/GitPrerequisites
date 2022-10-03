@@ -8,13 +8,15 @@ import java.util.HashMap;
 public class Index {
 	FileWriter index; //table of contents, list on every signle item, and where it exists 
 	HashMap <String, Blob> objects; 
+	File head;
 	public Index() throws IOException {
 		initialize();
-		
 	}
 	public void initialize() throws IOException {
+		head.delete();
 		index = new FileWriter("index"); 
 		objects = new HashMap <String,Blob> ();
+		head = new File("./HEAD");
 		File theDir = new File("/path/objects");
 		if (!theDir.exists()){
 		    theDir.mkdirs();
