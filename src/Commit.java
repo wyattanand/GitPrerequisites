@@ -19,16 +19,19 @@ public class Commit {
 	private String pointer;
 	private String nextPointer;
 	private Tree tree;
-	public Commit(String author, String sumOfChanges, String pointerParent) throws Exception {
+	private Commit pCommit;
+	public Commit(String author, String sumOfChanges, Commit parent) throws Exception {
 		Scanner scanny = new Scanner("./index");
 		String fileName;
 		String sha1;
+		pCommit = parent;
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNext()) {
 			fileName = scanny.next();
 			sha1 = (scanny.next() + scanny.next()).substring(1);
 			list.add("blob : " + sha1 + " " + fileName);
 		}
+		list.add("tree : " + pCommit.tree.sha1);
 		tree = new Tree(list);
 		File oldIndexFile = new File("./index");
 		oldIndexFile.delete();
@@ -36,13 +39,7 @@ public class Commit {
 		author1 = author;
 		summary = sumOfChanges; 
 		date = getDate (); 
-		sha1 = generateSha1(summary,date,author1,pointer);
-		if(pointer != null) {
-			pointer = pointerParent; 
-		}
-		else {
-			pointer = null;
-		}
+		sha1 = generateSha1(summary,date,author1,pCommit.sha1);
 		writeFile(); 
 		
 	}
@@ -65,6 +62,11 @@ public class Commit {
 	public String getDate () {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		return timeStamp;
+	}
+	
+	public boolean delete(String fileName) {
+		
+		return false;
 	}
 	
 	public void writeFile () throws IOException {

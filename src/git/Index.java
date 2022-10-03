@@ -19,6 +19,7 @@ public class Index {
 		if (!theDir.exists()){
 		    theDir.mkdirs();
 		}
+		
 	}
 	public void addBlob(String fileName) throws IOException {
 		Blob newBlobWithFileName = new Blob (fileName);
