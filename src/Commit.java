@@ -1,3 +1,4 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -76,17 +77,10 @@ public class Commit {
 		return timeStamp;
 	}
 	
-	public boolean delete(String fileName, Tree t) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-		String fileSha = toSha1(fileName);
-		Scanner scanny = new Scanner("./index");
-		String deletedFile;
-		ArrayList<String> arr = new ArrayList<String>();
-		while (scanny.hasNext()) {
-			arr.add(scanny.nextLine());
-		}
-		scanny.close();
-		
-		
+	public boolean delete(String fileName, Tree t) throws NoSuchAlgorithmException, IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
+		writer.append("*deleted*" + fileName);
+		writer.close();
 		
 		
 		return false;

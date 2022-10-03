@@ -25,7 +25,7 @@ public class Index {
 	}
 	public void addBlob(String fileName) throws IOException {
 		Blob newBlobWithFileName = new Blob (fileName);
-		objects.put(fileName,newBlobWithFileName);
+//		objects.put(fileName,newBlobWithFileName);
 		index.append(fileName + " : " + newBlobWithFileName); 
 	}
 	
