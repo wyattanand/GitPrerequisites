@@ -60,6 +60,7 @@ public class Commit {
 			list.add("tree : " + pCommit.getTree().getSha1());
 		}
 		tree = new Tree(list);
+		scanny.close();
 		File oldIndexFile = new File("./index");
 		oldIndexFile.delete();
 		File newIndexFile = new File("./index");
