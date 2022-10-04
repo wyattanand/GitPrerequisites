@@ -23,6 +23,7 @@ public class Commit {
 	private Commit nextPointer;
 	private Tree tree;
 	private Commit pCommit;
+	private ArrayList<String> array = new ArrayList<String>();
 	public Commit(String author, String sumOfChanges, Commit parent) throws Exception {
 		File indexFile = new File("./index.txt");
 		Scanner scanny = new Scanner(indexFile);
@@ -71,9 +72,46 @@ public class Commit {
 		headWriter.write(sha1);
 		headWriter.close();
 	}
-	
+	public boolean deleteFile(String fileName, Tree t) {
+		array.add(0, t.getSha1());
+		Scanner scanny = new Scanner("/objects/" + t.getSha1());
+		while (scanny.hasNextLine()) {
+			String line = scanny.nextLine();
+			if (scanny.nextLine().contains("blob") && !scanny.nextLine().contains(fileName)) {
+				array.add(line);
+			}
+			if (line.contains(fileName)) {
+				if (getPrevTree() != null) {
+					array.remove(0);
+					array.add(0, getPrevTree().getSha1());
+				}
+				getInfo(getTree().getSha1());
+				array.remove(line);
+				return true;
+			} 
+			if (line.contains("tree")){
+				deleteFile(fileName, getPrevTree());
+			}
+		}
+		scanny.close();
+		return false;
+	}
 	public Tree getTree() {
 		return tree;
+	}
+	public void getInfo(String str) {
+		Scanner scanny = new Scanner(str);
+		while (scanny.hasNextLine()) {
+			array.add(scanny.nextLine());
+		}
+		scanny.close();
+	}
+	public Tree getPrevTree() {
+		if (pCommit != null) {
+			return pCommit.getTree();
+		} else {
+			return null;
+		}
 	}
 	
 	public String getSha1() {
@@ -107,7 +145,7 @@ public class Commit {
 		return timeStamp;
 	}
 	
-	public void delete(String fileName, Tree t) throws NoSuchAlgorithmException, IOException {
+	public void delete(String fileName) throws NoSuchAlgorithmException, IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
 		writer.append("*deleted*" + fileName);
 		writer.close();
@@ -128,7 +166,6 @@ public class Commit {
 		fw.write(summary); // 6 writing location of previous commit
 		fw.close();
 	}
-	
 	public String toSha1(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		MessageDigest digest = MessageDigest.getInstance("SHA-1");
 		digest.reset(); 
