@@ -25,6 +25,7 @@ class CommitTester {
 		
 		Blob b3 = new Blob("naalah.txt");
 		i.addBlob("naalah.txt");
+		i.delete("funnyrandomstuff.txt");
 		Commit c3 = new Commit("Wyatt", "Changes Three", c2);
 		c3.writeFile();
 		
