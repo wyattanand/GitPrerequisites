@@ -38,6 +38,7 @@ public class Commit {
 			System.out.println(fileName);
 			if (fileName.charAt(0) == '*') {
 				deletedName = scanny.next();
+				deleteFile(deletedName, getPrevTree());
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).contains(deletedName)) {
 						list.remove(i);
@@ -51,6 +52,9 @@ public class Commit {
 				sha = (nxt1 + nxt2).substring(1);
 				list.add("blob : " + sha + " " + fileName);
 			}
+		}
+		for (int i = 0; i < array.size(); i++) {
+			list.add(array.get(i));
 		}
 		if (pCommit != null) {
 			list.add("tree : " + pCommit.getTree().getSha1());
@@ -143,12 +147,6 @@ public class Commit {
 	public String getDate () {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		return timeStamp;
-	}
-	
-	public void delete(String fileName) throws NoSuchAlgorithmException, IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
-		writer.append("*deleted*" + fileName);
-		writer.close();
 	}
 	
 	public void writeFile () throws IOException {

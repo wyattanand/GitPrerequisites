@@ -1,8 +1,10 @@
 package git;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class Index {
@@ -21,6 +23,11 @@ public class Index {
 		    theDir.mkdirs();
 		}
 		
+	}
+	public void delete(String fileName) throws NoSuchAlgorithmException, IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
+		writer.append("*deleted*" + fileName);
+		writer.close();
 	}
 	public void addBlob(String fileName) throws IOException {
 		Blob newBlobWithFileName = new Blob (fileName);
