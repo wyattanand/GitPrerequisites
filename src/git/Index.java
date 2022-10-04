@@ -13,7 +13,7 @@ public class Index {
 		initialize();
 	}
 	public void initialize() throws IOException {
-		index = new FileWriter("index"); 
+		index = new FileWriter("./index.txt"); 
 		objects = new HashMap <String,Blob> ();
 		head = new File("./HEAD");
 		File theDir = new File("/path/objects");

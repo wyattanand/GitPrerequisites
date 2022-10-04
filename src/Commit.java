@@ -20,16 +20,17 @@ public class Commit {
 	private String nameOfFile; 
 	private String sha1;
 	private String pointer;
-	private String nextPointer;
+	private Commit nextPointer;
 	private Tree tree;
 	private Commit pCommit;
 	public Commit(String author, String sumOfChanges, Commit parent) throws Exception {
-		File indexFile = new File("./index");
+		File indexFile = new File("./index.txt");
 		Scanner scanny = new Scanner(indexFile);
 		String fileName;
 		String sha;
 		String deletedName;
 		pCommit = parent;
+		connectParent();
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNextLine()) {
 			fileName = scanny.next();
@@ -78,7 +79,14 @@ public class Commit {
 	public String getSha1() {
 		return sha1;
 	}
-	
+	public void setChildCommit(Commit c) {
+		nextPointer = c;
+	}
+	private void connectParent() {
+		if (pCommit != null) {
+			pCommit.setChildCommit(this);
+		}
+	}
 	public String generateSha1 (String summary, String date, String author, String pointer) {
 		String value = summary + date + author + pointer;
 		String sha1 = "";
@@ -108,10 +116,15 @@ public class Commit {
 	public void writeFile () throws IOException {
 		FileWriter fw = new FileWriter(new File("objects", sha1));
 		fw.write(tree.getSha1()); // 1 writing p Tree value 
-		fw.write(pointer); // 2 writing location of previous commit
-		fw.write(nextPointer); // 3 writing location of next commit
+		fw.write("\n");
+		if (pCommit != null) {
+			fw.write(pCommit.getSha1()); // 2 writing location of previous commit
+			fw.write("\n");
+		}
 		fw.write(author1); //  4 writing author
+		fw.write("\n");
 		fw.write(date); // 5 writing date
+		fw.write("\n");
 		fw.write(summary); // 6 writing location of previous commit
 		fw.close();
 	}
