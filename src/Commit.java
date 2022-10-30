@@ -19,7 +19,7 @@ public class Commit {
 	private String summary;
 	private String nameOfFile; 
 	private String sha1;
-	private String pointer;
+	private String pPointer;
 	private Commit nextPointer;
 	private Tree tree;
 	private Commit pCommit;
@@ -32,6 +32,14 @@ public class Commit {
 		String deletedName;
 		pCommit = parent;
 		connectParent();
+		File HEAD = new File("./HEAD");
+		if (HEAD.exists()) {
+			Scanner head = new Scanner(HEAD);
+			pPointer = head.nextLine();
+		}
+		if (pPointer != null) {
+			ArrayList<String> fileContent = new ArrayList<String>();
+		}
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNextLine()) {
 			nextLine = scanny.nextLine();
@@ -146,10 +154,10 @@ public class Commit {
 	
 	public void writeFile () throws IOException {
 		FileWriter fw = new FileWriter(new File("objects", sha1));
-		fw.write(tree.getSha1()); // 1 writing p Tree value 
+		fw.write("objects/" + tree.getSha1()); // 1 writing p Tree value 
 		fw.write("\n");
 		if (pCommit != null) {
-			fw.write(pCommit.getSha1()); // 2 writing location of previous commit
+			fw.write("objects/" + pCommit.getSha1()); // 2 writing location of previous commit
 			fw.write("\n");
 		}
 		fw.write(author1); //  4 writing author
