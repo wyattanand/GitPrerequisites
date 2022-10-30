@@ -4,24 +4,22 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class Index {
-	FileWriter index; //table of contents, list on every signle item, and where it exists 
-	HashMap <String, Blob> objects; 
+	File index; //table of contents, list on every signle item, and where it exists 
+	HashMap <String, String> objects; 
 	File head;
 	public Index() throws IOException {
 		initialize();
 	}
 	public void initialize() throws IOException {
-		index = new FileWriter("./index.txt"); 
-		objects = new HashMap <String,Blob> ();
+		index = new File("./index"); 
+		objects = new HashMap <String,String> ();
 		head = new File("./HEAD");
-		File theDir = new File("/path/objects");
-		if (!theDir.exists()){
-		    theDir.mkdirs();
-		}
+		new File("./objects").mkdirs();
 		
 	}
 	public void delete(String fileName) throws NoSuchAlgorithmException, IOException {
@@ -30,23 +28,27 @@ public class Index {
 		writer.close();
 	}
 	public void addBlob(String fileName) throws IOException {
-		Blob newBlobWithFileName = new Blob (fileName);
-//		objects.put(fileName,newBlobWithFileName);
-		index.append(fileName + " : " + newBlobWithFileName); 
+		Blob newBlob = new Blob (fileName);
+		objects.put(fileName, newBlob.getSha());
+		PrintWriter pw = new PrintWriter("./index");
+		for (String key: objects.keySet()) {
+			pw.println(key + " : " + objects.get(key));
+		}
+		pw.close();
 	}
-	
+	/*
 	public void writeAllOfIndex () throws IOException {
 		for(String str : objects.keySet()) {
 			index.append(str + " : " ); 
 			index.append(" : " + objects.get(str).getSha());
 		}
 	}
-	
-	 
+	*/
+	/*
 	public void removeBlob(String fileName) throws IOException {
 		objects.remove(fileName);
 		writeAllOfIndex();
 		FileWriter fileToDelete = new FileWriter("./objects/"+ objects.get(fileName).getSha());
 		fileToDelete.close(); 	}
-	
+	*/
 }

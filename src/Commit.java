@@ -25,19 +25,18 @@ public class Commit {
 	private Commit pCommit;
 	private ArrayList<String> array = new ArrayList<String>();
 	public Commit(String author, String sumOfChanges, Commit parent) throws Exception {
-		File indexFile = new File("./index.txt");
+		File indexFile = new File("./index");
 		Scanner scanny = new Scanner(indexFile);
-		String fileName;
+		String nextLine;
 		String sha;
 		String deletedName;
 		pCommit = parent;
 		connectParent();
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNextLine()) {
-			fileName = scanny.next();
-			System.out.println(fileName);
-			if (fileName.charAt(0) == '*') {
-				deletedName = scanny.next();
+			nextLine = scanny.nextLine();
+			if (nextLine.contains("*deleted*")) {
+				deletedName = nextLine.substring(nextLine.indexOf(" ") + 1);
 				deleteFile(deletedName, getPrevTree());
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).contains(deletedName)) {
@@ -45,19 +44,14 @@ public class Commit {
 					}
 				}
 			} else {
-				String nxt1 = scanny.next();
-				System.out.println(nxt1);
-				String nxt2 = scanny.next();
-				System.out.println(nxt2);
-				sha = (nxt1 + nxt2).substring(1);
-				list.add("blob : " + sha + " " + fileName);
+				list.add("blob :" + nextLine.substring(nextLine.indexOf(':')+1) + " " + nextLine.substring(0, nextLine.indexOf(':')-1));
 			}
 		}
 		for (int i = 0; i < array.size(); i++) {
 			list.add(array.get(i));
 		}
 		if (pCommit != null) {
-			list.add("tree : " + pCommit.getTree().getSha1());
+			list.add("tree : " + getPrevTree().getSha1());
 		}
 		tree = new Tree(list);
 		scanny.close();

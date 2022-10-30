@@ -16,19 +16,19 @@ import java.util.*;
 public class Tree {
 	public String sha1;
 	public Tree(ArrayList<String> list) throws Exception {
-		File tree = new File("Objects/tree");
+		File tree = new File("objects/tree");
 		tree.createNewFile();
-		FileWriter myWriter = new FileWriter("Objects/tree");
+		FileWriter myWriter = new FileWriter("objects/tree");
 
 		for(String pair : list) {
 			pair+="\n";
 		      myWriter.write(pair);
-		      System.out.println("Successfully wrote to the file.");
+		     // System.out.println("Successfully wrote to the file.");
 		}
 		myWriter.close();
 		String contents = readFile(tree.getPath(), StandardCharsets.US_ASCII);
 		sha1 = encryptThisString(contents);
-		File newFile = new File("Objects/" + sha1);
+		File newFile = new File("objects/" + sha1);
 		newFile.createNewFile();
 		copyContent(tree, newFile);
 		tree.delete();
@@ -94,7 +94,15 @@ public class Tree {
                 out.close();
             }
         }
-        System.out.println("File Copied");
+        //System.out.println("File Copied");
     }
-	
+	public static void main(String [] args) throws Exception {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("blob : 81e0268c84067377a0a1fdfb5cc996c93f6dcf9f");
+		list.add("blob : 01d82591292494afd1602d175e165f94992f6f5f");
+		list.add("blob : f1d82236ab908c86ed095023b1d2e6ddf78a6d83");
+		list.add("tree : bd1ccec139dead5ee0d8c3a0499b42a7d43ac44b");
+		list.add("tree : e7d79898d3342fd15daf6ec36f4cb095b52fd976");
+		Tree t = new Tree(list);
+	}
 }
