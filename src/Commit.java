@@ -46,7 +46,7 @@ public class Commit {
 			nextLine = scanny.nextLine();
 			if (nextLine.contains("*deleted*")) {
 				deletedName = nextLine.substring(nextLine.indexOf(" ") + 1);
-				deleteFile(deletedName, getPrevTree());
+				deleteFile(deletedName, getPrevTree().getSha1());
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).contains(deletedName)) {
 						list.remove(i);
@@ -80,10 +80,19 @@ public class Commit {
 		headWriter.write(sha1);
 		headWriter.close();
 	}
-	public boolean deleteFile(String fileName, Tree t) throws FileNotFoundException {
-		array.add(0, t.getSha1());
-		File tFile = new File("./objects/" + t.getSha1());
+	public boolean deleteFile(String fileName, String treeSha) throws FileNotFoundException {
+		array.add(0, treeSha);
+		File tFile = new File("./objects/" + treeSha);
 		Scanner scanny = new Scanner(tFile);
+		String nextTreeSha = "";
+		Scanner treeScan = new Scanner(tFile);
+		while (treeScan.hasNextLine()) {
+			String tLine = treeScan.nextLine();
+			if (tLine.contains("tree")) {
+				nextTreeSha = tLine.substring(7, 47);
+			}
+		}
+		System.out.println(nextTreeSha);
 		while (scanny.hasNextLine()) {
 			String line = scanny.nextLine();
 			System.out.println(line);
@@ -91,16 +100,16 @@ public class Commit {
 				array.add(line);
 			}
 			if (line.contains(fileName)) {
-				if (getPrevTree() != null) {
+				if (nextTreeSha != "") {
 					array.remove(0);
-					array.add(0, getPrevTree().getSha1());
+					array.add(0, nextTreeSha);
 				}
-				getInfo(getTree().getSha1());
+				getInfo(treeSha);
 				array.remove(line);
 				return true;
 			} 
 			if (line.contains("tree")){
-				deleteFile(fileName, pCommit.getPrevTree());
+				deleteFile(fileName, line.substring(7, 47));
 			}
 		}
 		scanny.close();
@@ -110,7 +119,7 @@ public class Commit {
 		return tree;
 	}
 	public void getInfo(String str) {
-		Scanner scanny = new Scanner(str);
+		Scanner scanny = new Scanner("./objects/" + str);
 		while (scanny.hasNextLine()) {
 			array.add(scanny.nextLine());
 		}
@@ -129,6 +138,9 @@ public class Commit {
 	}
 	public void setChildCommit(Commit c) {
 		nextPointer = c;
+	}
+	public Commit getPrevCommit() {
+		return pCommit;
 	}
 	private void connectParent() {
 		if (pCommit != null) {
