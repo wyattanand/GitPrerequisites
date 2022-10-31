@@ -24,8 +24,6 @@ public class Blob {
 	
 	public Blob (String filePath) throws IOException {
 		value = filePath; 
-		System.out.println ("shidded on em");
-		System.out.println("naalah"); 
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-1");
 	        digest.reset();

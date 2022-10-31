@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -79,12 +80,14 @@ public class Commit {
 		headWriter.write(sha1);
 		headWriter.close();
 	}
-	public boolean deleteFile(String fileName, Tree t) {
+	public boolean deleteFile(String fileName, Tree t) throws FileNotFoundException {
 		array.add(0, t.getSha1());
-		Scanner scanny = new Scanner("/objects/" + t.getSha1());
+		File tFile = new File("./objects/" + t.getSha1());
+		Scanner scanny = new Scanner(tFile);
 		while (scanny.hasNextLine()) {
 			String line = scanny.nextLine();
-			if (scanny.nextLine().contains("blob") && !scanny.nextLine().contains(fileName)) {
+			System.out.println(line);
+			if (line.contains("blob") && !line.contains(fileName)) {
 				array.add(line);
 			}
 			if (line.contains(fileName)) {
@@ -97,7 +100,7 @@ public class Commit {
 				return true;
 			} 
 			if (line.contains("tree")){
-				deleteFile(fileName, getPrevTree());
+				deleteFile(fileName, pCommit.getPrevTree());
 			}
 		}
 		scanny.close();
