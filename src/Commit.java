@@ -1,8 +1,11 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -33,6 +36,14 @@ public class Commit {
 		String deletedName;
 		pCommit = parent;
 		connectParent();
+		author1 = author;
+		summary = sumOfChanges; 
+		date = getDate ();
+		String parentSha = "";
+		sha1 = generateSha1(summary,date,author1, parentSha);
+		if (pCommit != null) {
+			parentSha = pCommit.getSha1();
+		}
 		File HEAD = new File("./HEAD");
 		if (HEAD.exists()) {
 			Scanner head = new Scanner(HEAD);
@@ -40,6 +51,20 @@ public class Commit {
 		}
 		if (pPointer != null) {
 			ArrayList<String> fileContent = new ArrayList<String>();
+			BufferedReader br = new BufferedReader(new FileReader("./objects/" + pPointer));
+			for (int i = 0; i < 2; i++) {
+				fileContent.add(br.readLine());
+			}
+			fileContent.add("./objects/" + sha1);
+			for (int i = 0; i < 3; i++) {
+				fileContent.add(br.readLine());
+			}
+			br.close();
+			PrintWriter pw = new PrintWriter("./objects/" + pPointer);
+			for (int i = 0; i < fileContent.size(); i++) {
+				pw.println(fileContent.get(i));
+			}
+			pw.close();
 		}
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNextLine()) {
@@ -67,14 +92,6 @@ public class Commit {
 		File oldIndexFile = new File("./index");
 		oldIndexFile.delete();
 		File newIndexFile = new File("./index");
-		author1 = author;
-		summary = sumOfChanges; 
-		date = getDate (); 
-		String parentSha = "";
-		if (pCommit != null) {
-			parentSha = pCommit.getSha1();
-		}
-		sha1 = generateSha1(summary,date,author1, parentSha);
 		writeFile(); 
 		FileWriter headWriter = new FileWriter("./HEAD");
 		headWriter.write(sha1);
@@ -106,6 +123,7 @@ public class Commit {
 				}
 				getInfo(treeSha);
 				array.remove(line);
+				scanny.close();
 				return true;
 			} 
 			if (line.contains("tree")){
@@ -173,6 +191,8 @@ public class Commit {
 		fw.write("\n");
 		if (pCommit != null) {
 			fw.write("objects/" + pCommit.getSha1()); // 2 writing location of previous commit
+			fw.write("\n");
+		} else {
 			fw.write("\n");
 		}
 		fw.write(author1); //  4 writing author
