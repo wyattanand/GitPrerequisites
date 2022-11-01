@@ -24,7 +24,7 @@ public class Index {
 	}
 	public void delete(String fileName) throws NoSuchAlgorithmException, IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
-		writer.append("*deleted*" + fileName);
+		writer.append("*deleted* " + fileName);
 		writer.close();
 	}
 	public void addBlob(String fileName) throws IOException {

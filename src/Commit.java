@@ -34,6 +34,7 @@ public class Commit {
 		String nextLine;
 		String sha;
 		String deletedName;
+		boolean deleted = false;
 		pCommit = parent;
 		connectParent();
 		author1 = author;
@@ -71,7 +72,9 @@ public class Commit {
 			nextLine = scanny.nextLine();
 			if (nextLine.contains("*deleted*")) {
 				deletedName = nextLine.substring(nextLine.indexOf(" ") + 1);
+				System.out.println(deletedName);
 				deleteFile(deletedName, getPrevTree().getSha1());
+				deleted = true;
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).contains(deletedName)) {
 						list.remove(i);
@@ -84,7 +87,7 @@ public class Commit {
 		for (int i = 0; i < array.size(); i++) {
 			list.add(array.get(i));
 		}
-		if (pCommit != null) {
+		if (pCommit != null && deleted != true) {
 			list.add("tree : " + getPrevTree().getSha1());
 		}
 		tree = new Tree(list);
@@ -98,18 +101,10 @@ public class Commit {
 		headWriter.close();
 	}
 	public boolean deleteFile(String fileName, String treeSha) throws FileNotFoundException {
-		array.add(0, treeSha);
 		File tFile = new File("./objects/" + treeSha);
 		Scanner scanny = new Scanner(tFile);
 		String nextTreeSha = "";
 		Scanner treeScan = new Scanner(tFile);
-		while (treeScan.hasNextLine()) {
-			String tLine = treeScan.nextLine();
-			if (tLine.contains("tree")) {
-				nextTreeSha = tLine.substring(7, 47);
-			}
-		}
-		System.out.println(nextTreeSha);
 		while (scanny.hasNextLine()) {
 			String line = scanny.nextLine();
 			System.out.println(line);
@@ -117,10 +112,6 @@ public class Commit {
 				array.add(line);
 			}
 			if (line.contains(fileName)) {
-				if (nextTreeSha != "") {
-					array.remove(0);
-					array.add(0, nextTreeSha);
-				}
 				getInfo(treeSha);
 				array.remove(line);
 				scanny.close();
@@ -136,8 +127,9 @@ public class Commit {
 	public Tree getTree() {
 		return tree;
 	}
-	public void getInfo(String str) {
-		Scanner scanny = new Scanner("./objects/" + str);
+	public void getInfo(String str) throws FileNotFoundException {
+		File file = new File("./objects/" + str);
+		Scanner scanny = new Scanner(file);
 		while (scanny.hasNextLine()) {
 			array.add(scanny.nextLine());
 		}
