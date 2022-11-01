@@ -32,7 +32,7 @@ class CommitTest {
 		
 		Blob b4 = new Blob("animal.txt");
 		Index i4 = new Index();
-		//i4.addBlob("animal.txt");
+		i4.addBlob("animal.txt");
 		i4.delete("funnyrandomstuff.txt");
 		Commit c4 = new Commit("Wyatt", "Changes Four", c3);
 		c4.writeFile();

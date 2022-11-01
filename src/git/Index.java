@@ -2,6 +2,7 @@ package git;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,19 +24,28 @@ public class Index {
 		
 	}
 	public void delete(String fileName) throws NoSuchAlgorithmException, IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter("./index"));
-		writer.append("*deleted* " + fileName);
-		writer.close();
+		objects.put(fileName, "*deleted*");
+		writeFile();
 	}
 	public void addBlob(String fileName) throws IOException {
 		Blob newBlob = new Blob (fileName);
 		objects.put(fileName, newBlob.getSha());
+		writeFile();
+	}
+	private void writeFile() throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter("./index");
 		for (String key: objects.keySet()) {
-			pw.println(key + " : " + objects.get(key));
+			if (objects.get(key).equals("*deleted*")) {
+				pw.println(objects.get(key) + " " + key);
+			}
+			else {
+				pw.println(key + " : " + objects.get(key));
+			}
 		}
 		pw.close();
 	}
+	
+	
 	/*
 	public void writeAllOfIndex () throws IOException {
 		for(String str : objects.keySet()) {

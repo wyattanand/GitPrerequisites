@@ -70,16 +70,11 @@ public class Commit {
 		ArrayList<String> list = new ArrayList<String>();
 		while (scanny.hasNextLine()) {
 			nextLine = scanny.nextLine();
+			System.out.println(nextLine);
 			if (nextLine.contains("*deleted*")) {
 				deletedName = nextLine.substring(nextLine.indexOf(" ") + 1);
-				System.out.println(deletedName);
 				deleteFile(deletedName, getPrevTree().getSha1());
 				deleted = true;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).contains(deletedName)) {
-						list.remove(i);
-					}
-				}
 			} else {
 				list.add("blob :" + nextLine.substring(nextLine.indexOf(':')+1) + " " + nextLine.substring(0, nextLine.indexOf(':')-1));
 			}
@@ -107,7 +102,6 @@ public class Commit {
 		Scanner treeScan = new Scanner(tFile);
 		while (scanny.hasNextLine()) {
 			String line = scanny.nextLine();
-			System.out.println(line);
 			if (line.contains("blob") && !line.contains(fileName)) {
 				array.add(line);
 			}
